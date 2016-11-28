@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ChessView">
+        <attr name="chessView_labelColor" format="color" />
+        <attr name="chessView_boardColor" format="color" />
+        <attr name="chessView_cellWhiteColor" format="color" />
+        <attr name="chessView_cellBlackColor" format="color" />
+        <attr name="chessView_cellSelectedWhiteColor" format="color" />
+        <attr name="chessView_cellSelectedBlackColor" format="color" />
+        <attr name="chessView_labelSize" format="dimension" />
+        <attr name="chessView_boarderWidth" format="dimension" />
+    </declare-styleable>
+</resources>
