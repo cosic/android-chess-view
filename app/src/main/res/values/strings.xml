@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ChessView</string>
+    <string name="action_reset">Reset</string>
 </resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:background="?attr/selectableItemBackground"
+>
+
+    <TextView
+        android:id="@+id/board_move_item_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textColor="#9b9b9b"
+        android:textSize="10sp"
+        tools:text="7"
+    />
+
+    <LinearLayout
+        android:id="@+id/board_move_item_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        tools:background="@drawable/sp_rect_accent"
+    >
+
+        <ImageView
+            android:id="@+id/board_move_item_figure"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/ic_figure_pawn_white"
+        />
+
+        <TextView
+            android:id="@+id/board_move_item_cell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            tools:text="e4"
+        />
+
+    </LinearLayout>
+
+</LinearLayout>
