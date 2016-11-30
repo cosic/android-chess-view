@@ -14,20 +14,18 @@ import com.ltst.chessview.ChessView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ltst.chessview.sample.Move.from;
-
 public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> {
 
     private OnSelectedItemChange mOnSelectedItemChange;
 
-    private List<Move> mItems = new ArrayList<>();
+    private List<MoveItem> mItems = new ArrayList<>();
 
     public void setOnSelectedItemChange(@Nullable OnSelectedItemChange onSelectedItemChange) {
         this.mOnSelectedItemChange = onSelectedItemChange;
     }
 
     public int getSelectedPosition() {
-        List<Move> items = getItems();
+        List<MoveItem> items = getItems();
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).isSelected()) {
                 return i;
@@ -38,7 +36,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
 
     public void setSelection(int position) {
 
-        List<Move> items = getItems();
+        List<MoveItem> items = getItems();
 
         if (items.size() == 0) return;
 
@@ -66,7 +64,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        Move item = getItem(position);
+        MoveItem item = getItem(position);
         viewHolder.mStep.setVisibility(position % 2 == 0 ? View.VISIBLE : View.GONE);
         viewHolder.mStep.setText(String.valueOf(position / 2 + 1));
         viewHolder.mMove.setText(item.getSan());
@@ -88,7 +86,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
         return mItems.size();
     }
 
-    public Move getItem(int position) {
+    public MoveItem getItem(int position) {
         return mItems.get(position);
     }
 
@@ -97,11 +95,11 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
         return mItems.get(position).getNum();
     }
 
-    private List<Move> getItems() {
+    private List<MoveItem> getItems() {
         return mItems;
     }
 
-    public void addAll(List<Move> list) {
+    public void addAll(List<MoveItem> list) {
         mItems.addAll(list);
         notifyDataSetChanged();
     }

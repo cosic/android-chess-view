@@ -2,7 +2,7 @@ package com.ltst.chessview.sample;
 
 import com.ltst.chessview.ChessView;
 
-public final class Move {
+public final class MoveItem {
 
     private int num;
     private String piece;
@@ -13,14 +13,14 @@ public final class Move {
     private String turn;
     private boolean isSelected;
 
-    public Move(int num,
-                String piece,
-                String fen,
-                String from,
-                String to,
-                String san,
-                String turn,
-                boolean isSelected) {
+    public MoveItem(int num,
+                    String piece,
+                    String fen,
+                    String from,
+                    String to,
+                    String san,
+                    String turn,
+                    boolean isSelected) {
 
         this.num = num;
         this.piece = piece;
