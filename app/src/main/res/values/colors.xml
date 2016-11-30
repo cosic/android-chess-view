@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAction2">@android:color/white</color>
-    <color name="colorBackground">#DADADA</color>
+    <color name="colorBackground">#A3A3A3</color>
 
     <color name="labelColor">#149aa1</color>
     <color name="boardColor">#fc646f</color>

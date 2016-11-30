@@ -16,6 +16,8 @@ import java.util.List;
 
 public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> {
 
+    public static final int NO_POSITION = -1;
+
     private OnSelectedItemChange mOnSelectedItemChange;
 
     private List<MoveItem> mItems = new ArrayList<>();
@@ -31,7 +33,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
                 return i;
             }
         }
-        return 0;
+        return NO_POSITION;
     }
 
     public void setSelection(int position) {
@@ -51,7 +53,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
         }
 
         if (mOnSelectedItemChange != null) {
-            mOnSelectedItemChange.onSelectedItemChange(position);
+            mOnSelectedItemChange.onSelectedItemChange(position, selectedPosition);
         }
     }
 
@@ -105,7 +107,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
     }
 
     public interface OnSelectedItemChange {
-        void onSelectedItemChange(int position);
+        void onSelectedItemChange(int newPosition, int oldPosition);
     }
 
     public static final class ViewHolder extends RecyclerView.ViewHolder {

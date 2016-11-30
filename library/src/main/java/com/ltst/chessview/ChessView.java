@@ -476,18 +476,18 @@ public class ChessView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        int size = Math.min(w, h);
+        int size = Math.min(w - getPaddingLeft() - getPaddingRight(), h - getPaddingTop() - getPaddingBottom());
         // TODO keep in mind the padding size;
         mCellSize = (size - 2 * mBorderWidth) / COUNT_OF_CELLS;
-        mFullRect = new Rect(0, 0, size, size);
-        mInnerRect = new Rect(mBorderWidth, mBorderWidth, size - mBorderWidth, size - mBorderWidth);
+        mFullRect = new Rect(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + size, getPaddingTop() + size);
+        mInnerRect = new Rect(mBorderWidth + getPaddingLeft(), mBorderWidth + getPaddingTop(), size - mBorderWidth + getPaddingLeft(), size - mBorderWidth + getPaddingTop());
         for (int i = 0; i < COUNT_OF_CELLS; i++) {
             for (int j = 0; j < COUNT_OF_CELLS; j++) {
                 mCells[i][j] = new Rect(
-                        mBorderWidth + i * mCellSize,
-                        mBorderWidth + j * mCellSize,
-                        mBorderWidth + (i + 1) * mCellSize,
-                        mBorderWidth + (j + 1) * mCellSize);
+                        getPaddingLeft() + mBorderWidth + i * mCellSize,
+                        getPaddingTop() + mBorderWidth + j * mCellSize,
+                        getPaddingLeft() + mBorderWidth + (i + 1) * mCellSize,
+                        getPaddingTop() + mBorderWidth + (j + 1) * mCellSize);
             }
         }
         mBitmapCache.clear();
@@ -511,13 +511,13 @@ public class ChessView extends View {
         int labelWidth = mLabelBoundsRect.width();
         for (int i = 0; i < COUNT_OF_CELLS; i++) {
             canvas.drawText(LABEL_VERTICAL[i],
-                    mBorderWidth / 2 - mLabelBoundsRect.width() / 2 - 2,
-                    mBorderWidth + mCellSize * i + mCellSize / 2 + mLabelBoundsRect.height() / 2,
+                    mBorderWidth / 2 - mLabelBoundsRect.width() / 2 + getPaddingLeft(),
+                    mBorderWidth + mCellSize * i + mCellSize / 2 + mLabelBoundsRect.height() / 2 + getPaddingTop(),
                     mLabelPaint
             );
             canvas.drawText(String.valueOf(LABEL_HORIZONTAL[i]),
-                    mBorderWidth + mCellSize * i + mCellSize / 2 - labelWidth / 2,
-                    height - (mBorderWidth - labelHeight) / 2 - 2,
+                    mBorderWidth + mCellSize * i + mCellSize / 2 - labelWidth / 2 + getPaddingLeft(),
+                    mBorderWidth + mCellSize * COUNT_OF_CELLS + labelHeight + (mBorderWidth - labelHeight) / 2 + 2 + getPaddingTop(),
                     mLabelPaint
             );
         }
