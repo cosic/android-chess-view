@@ -15,9 +15,9 @@
         android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         app:titleTextColor="@android:color/white"
-        android:background="?attr/colorPrimary">
-    </android.support.v7.widget.Toolbar>
+        />
 
     <com.ltst.chessview.ChessView
         android:id="@+id/chess_view"
@@ -32,7 +32,7 @@
         app:chessView_boarderWidth="@dimen/boarderWidth"
     />
 
-    <include layout="@layout/board_navigation_view"/>
+    <include layout="@layout/navigation_view"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

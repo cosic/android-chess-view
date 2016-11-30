@@ -143,8 +143,10 @@ public class ChessView extends View {
             a.recycle();
         }
 
+        initPaints();
+    }
 
-
+    public void initPaints() {
         mPiecePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPiecePaint.setStyle(Paint.Style.FILL);
         mPiecePaint.setColor(Color.BLACK);
@@ -175,7 +177,6 @@ public class ChessView extends View {
         mCellSelectedDarkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCellSelectedDarkPaint.setStyle(Paint.Style.FILL);
         mCellSelectedDarkPaint.setColor(mCellSelectedDarkColor);
-
     }
 
     public static ChessData[][] getDefaultFigureData() {
@@ -247,10 +248,10 @@ public class ChessView extends View {
     }
 
     /**
-     * @param fen  - Forsyth - Edwards Notation and looks like: "rnbqkbnr/pp1ppppp/8/2p5/2P5/8/PP1PPPPP/RNBQKBNR"
-     *             More information: @see <a href="Wiki">https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation</a>
+     * @param fen  - The Forsyth - Edwards Notation and looks like: "rnbqkbnr/pp1ppppp/8/2p5/2P5/8/PP1PPPPP/RNBQKBNR"
+     * More information: @see <a href="Wiki">https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation</a>
      */
-    public void applyFen(String fen, Move lastMove) {
+    public void applyFen(String fen, Move lastMove, boolean showAnimation) {
 
         if (fen == null) {
             return;
@@ -291,6 +292,7 @@ public class ChessView extends View {
             }
         }
 
+        // TODO I believe there is a better way to do that;
         List<Move> moves = new ArrayList<>();
         for (int i = 0; i < COUNT_OF_CELLS; i++) {
             for (int j = 0; j < COUNT_OF_CELLS; j++) {
@@ -304,7 +306,6 @@ public class ChessView extends View {
                             }
                         }
                     }
-
                 }
             }
         }
@@ -390,13 +391,13 @@ public class ChessView extends View {
      * Apply moving for current figures state;
      *
      * @param moves     - moving array;
-     * @param showSteps - true start animation, false - calculate and set last state of figures immediately;
+     * @param showAnimation - true start animation, false - calculate and set last state of figures immediately;
      */
-    public void applyMoving(Move[][] moves, boolean showSteps) {
+    public void applyMoving(Move[][] moves, boolean showAnimation) {
 
         stopAnimation();
 
-        if (showSteps) {
+        if (showAnimation) {
             mDrawAnimationThread = new DrawAnimationThread(moves, this);
             mDrawAnimationThread.setRunning(true);
             mDrawAnimationThread.setShowLastMove(mShowLastMove);
@@ -476,6 +477,7 @@ public class ChessView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         int size = Math.min(w, h);
+        // TODO keep in mind the padding size;
         mCellSize = (size - 2 * mBorderWidth) / COUNT_OF_CELLS;
         mFullRect = new Rect(0, 0, size, size);
         mInnerRect = new Rect(mBorderWidth, mBorderWidth, size - mBorderWidth, size - mBorderWidth);
@@ -617,7 +619,6 @@ public class ChessView extends View {
          * false - the cell of chess mPiece has default background;
          */
         private boolean mIsSelected;
-
 
         /**
          * X index of target position for animation;

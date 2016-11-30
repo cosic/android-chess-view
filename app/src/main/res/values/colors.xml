@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorAction2">@android:color/white</color>
+    <color name="colorBackground">#DADADA</color>
 
     <color name="labelColor">#149aa1</color>
     <color name="boardColor">#fc646f</color>

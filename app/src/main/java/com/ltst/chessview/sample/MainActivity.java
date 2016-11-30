@@ -57,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
         mMovesAdapter.setOnSelectedItemChange(new MovesAdapter.OnSelectedItemChange() {
             @Override
             public void onSelectedItemChange(int position) {
-                MovesAdapter.Move item = mMovesAdapter.getItem(position);
-                mChessView.applyFen(item.getFen(), from(item));
+                Move item = mMovesAdapter.getItem(position);
+                mChessView.applyFen(item.getFen(), from(item), false);
+                mLabelCell.setText(item.getSan());
+                mLabelFigure.setImageResource(item.getCell().drawable);
             }
         });
 
@@ -108,16 +110,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        List<MovesAdapter.Move> list = new ArrayList<>();
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", "e2", "e4", "e4", "w", true));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", "e7", "e5", "e5", "b", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "g1", "f3", "Nf3", "w", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "b8", "c6", "Nc6", "b", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "f1", "b5", "Bb5", "w", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "a7", "a6", "a6", "b", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R", "b5", "a4", "Ba4", "w", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R", "g8", "f6", "Nf6", "b", false));
-        list.add(new MovesAdapter.Move(ChessView.Cell.BISHOP_WHITE, "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1", "e1", "g1", "O-O", "w", false));
+        List<Move> list = new ArrayList<>();
+        list.add(new Move(1, "P", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", "e2", "e4", "e4", "w", true));
+        list.add(new Move(2, "P", "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", "e7", "e5", "e5", "b", false));
+        list.add(new Move(3, "N", "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "g1", "f3", "Nf3", "w", false));
+        list.add(new Move(4, "N", "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "b8", "c6", "Nc6", "b", false));
+        list.add(new Move(5, "B", "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "f1", "b5", "Bb5", "w", false));
+        list.add(new Move(6, "N", "r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "g8", "f6", "Nf6", "b", false));
+        list.add(new Move(7, "P", "r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1", "e1", "g1", "O-O", "w", false));
+        list.add(new Move(8, "N", "r1bqkb1r/pppp1ppp/2n5/1B2p3/4n3/5N2/PPPP1PPP/RNBQ1RK1", "f6", "e4", "Nxe4", "b", false));
+        list.add(new Move(9, "R", "r1bqkb1r/pppp1ppp/2n5/1B2p3/4n3/5N2/PPPP1PPP/RNBQR1K1", "f1", "e1", "Re1", "w", false));
+        list.add(new Move(10, "N", "r1bqkb1r/pppp1ppp/2nn4/1B2p3/8/5N2/PPPP1PPP/RNBQR1K1", "e4", "d6", "Nd6", "b", false));
+        list.add(new Move(11, "N", "r1bqkb1r/pppp1ppp/2nn4/1B2N3/8/8/PPPP1PPP/RNBQR1K1", "f3", "e5", "Nxe5", "w", false));
         mMovesAdapter.addAll(list);
         mMovesAdapter.setSelection(0);
     }
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private ChessView.Move from(MovesAdapter.Move item) {
+    private ChessView.Move from(Move item) {
         return ChessView.Move.from(
                 item.getFrom().charAt(0),
                 item.getFrom().charAt(1),

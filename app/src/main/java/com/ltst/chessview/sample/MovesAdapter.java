@@ -14,13 +14,13 @@ import com.ltst.chessview.ChessView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ltst.chessview.sample.Move.from;
+
 public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> {
 
     private OnSelectedItemChange mOnSelectedItemChange;
 
     private List<Move> mItems = new ArrayList<>();
-
-
 
     public void setOnSelectedItemChange(@Nullable OnSelectedItemChange onSelectedItemChange) {
         this.mOnSelectedItemChange = onSelectedItemChange;
@@ -60,7 +60,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.board_move_item_view, parent, false);
+        View view = inflater.inflate(R.layout.move_item_view, parent, false);
         return new ViewHolder(view);
     }
 
@@ -75,7 +75,10 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
         if (item.getSan().contains("O-O")) {
             viewHolder.mFigure.setVisibility(View.GONE);
         } else {
-            viewHolder.mFigure.setImageResource(item.getCell().drawable);
+            ChessView.Cell cell = item.getCell();
+            if (cell != null) {
+                viewHolder.mFigure.setImageResource(cell.drawable);
+            }
             viewHolder.mFigure.setVisibility(View.VISIBLE);
         }
     }
@@ -89,6 +92,11 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
         return mItems.get(position);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return mItems.get(position).getNum();
+    }
+
     private List<Move> getItems() {
         return mItems;
     }
@@ -98,94 +106,8 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public final static class Move {
-
-        private ChessView.Cell cell;
-        private String fen;
-        private String from;
-        private String to;
-        private String san;
-        private String turn;
-        private boolean isSelected;
-
-        public Move(ChessView.Cell cell, String fen, String from, String to, String san, String turn, boolean isSelected) {
-            this.cell = cell;
-            this.fen = fen;
-            this.from = from;
-            this.to = to;
-            this.san = san;
-            this.turn = turn;
-            this.isSelected = isSelected;
-        }
-
-        public ChessView.Cell getCell() {
-            return cell;
-        }
-
-        public String getTurn() {
-            return turn;
-        }
-
-        public String getFen() {
-            return fen;
-        }
-
-        public String getTo() {
-            return to;
-        }
-
-        public String getFrom() {
-            return from;
-        }
-
-        public String getSan() {
-            return san;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        public void setSelected(boolean selected) {
-            isSelected = selected;
-        }
-    }
-
     public interface OnSelectedItemChange {
         void onSelectedItemChange(int position);
-    }
-
-    public static ChessView.Cell from(String turn, String piece) {
-        if (turn.toLowerCase().equals(ChessView.Side.BLACK.value.toLowerCase())) {
-            if (piece == null) {
-                return ChessView.Cell.PAWN_BLACK;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.ROOK.value.toLowerCase())) {
-                return ChessView.Cell.ROOK_BLACK;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.KNIGHT.value.toLowerCase())) {
-                return ChessView.Cell.KNIGHT_BLACK;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.BISHOP.value.toLowerCase())) {
-                return ChessView.Cell.BISHOP_BLACK;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.QUEEN.value.toLowerCase())) {
-                return ChessView.Cell.QUEEN_BLACK;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.KING.value.toLowerCase())) {
-                return ChessView.Cell.KING_BLACK;
-            }
-        } else {
-            if (piece == null) {
-                return ChessView.Cell.PAWN_WHITE;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.ROOK.value.toLowerCase())) {
-                return ChessView.Cell.ROOK_WHITE;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.KNIGHT.value.toLowerCase())) {
-                return ChessView.Cell.KNIGHT_WHITE;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.BISHOP.value.toLowerCase())) {
-                return ChessView.Cell.BISHOP_WHITE;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.QUEEN.value.toLowerCase())) {
-                return ChessView.Cell.QUEEN_WHITE;
-            } else if (piece.toLowerCase().equals(ChessView.Piece.KING.value.toLowerCase())) {
-                return ChessView.Cell.KING_WHITE;
-            }
-        }
-        return null;
     }
 
     public static final class ViewHolder extends RecyclerView.ViewHolder {
