@@ -58,7 +58,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSelectedItemChange(int newPosition, int previousPosition) {
                 MoveItem item = mMovesAdapter.getItem(newPosition);
-                mChessView.applyFen(item.getFen(), from(item), false);
+                if (newPosition == previousPosition + 1) {
+                    ChessView.ActionImpl[][] moves = new ChessView.ActionImpl[1][1];
+                    MoveItem previousItem = mMovesAdapter.getItem(previousPosition);
+                    moves[0][0] = from(item);
+                    mChessView.applyFen(previousItem.getFen(), null, false);
+                    mChessView.applyMoving(moves, true);
+                } else {
+                    mChessView.applyFen(item.getFen(), from(item), false);
+                }
                 mLabelCell.setText(item.getSan());
                 mLabelFigure.setImageResource(item.getCell().drawable);
             }

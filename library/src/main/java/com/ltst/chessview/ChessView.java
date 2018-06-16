@@ -276,7 +276,11 @@ public class ChessView extends View {
         invalidate();
     }
 
-    public Move[][] getMoves(String fenFrom, String fenTo) {
+    /**
+     * First array index - index of iteration;
+     * Second array index - piece index;
+     */
+    public ActionImpl[][] getMoves(String fenFrom, String fenTo) {
 
         ChessData[][] dataFrom = convertFenToData(fenFrom);
         ChessData[][] dataTo = convertFenToData(fenTo);
@@ -393,7 +397,7 @@ public class ChessView extends View {
      * @param moves     - moving array;
      * @param showAnimation - true start animation, false - calculate and set last state of figures immediately;
      */
-    public void applyMoving(Move[][] moves, boolean showAnimation) {
+    public void applyMoving(ActionImpl[][] moves, boolean showAnimation) {
 
         stopAnimation();
 
@@ -403,9 +407,9 @@ public class ChessView extends View {
             mDrawAnimationThread.setShowLastMove(mShowLastMove);
             mDrawAnimationThread.setListener(new DrawAnimationThread.OnDrawThreadListener() {
                 @Override
-                public void onMove(Move[] move) {
+                public void onMove(List<Move> moves) {
                     if (mOnMoveListener != null) {
-                        mOnMoveListener.onMove(move);
+                        mOnMoveListener.onMove(moves);
                     }
                 }
 
@@ -418,20 +422,20 @@ public class ChessView extends View {
             });
             mDrawAnimationThread.start();
         } else {
-            for (Move[] moves2 : moves) {
-                for (Move move : moves2) {
+            for (ActionImpl[] actionArray : moves) {
+                for (ActionImpl action : actionArray) {
 
 //                for (int i = 0; i < 3; i++) {
-//                    ChessData chessDataFrom = mData[move.getFromX()][move.getFromY()];
-//                    ChessData chessDataTo = mData[move.getToX()][move.getToY()];
+//                    ChessData chessDataFrom = mData[action.getFromX()][action.getFromY()];
+//                    ChessData chessDataTo = mData[action.getToX()][action.getToY()];
 //                    switch (i) {
 //                        case 0:
 //                            chessDataFrom.setSelected(true);
 //                            chessDataTo.setSelected(true);
 //                            break;
 //                        case 1:
-//                            mData[move.getToX()][move.getToY()] = chessDataFrom;
-//                            mData[move.getFromX()][move.getFromY()] = chessDataTo;
+//                            mData[action.getToX()][action.getToY()] = chessDataFrom;
+//                            mData[action.getFromX()][action.getFromY()] = chessDataTo;
 //                            break;
 //                        case 2:
 //                            chessDataFrom.setSelected(false);
@@ -441,6 +445,8 @@ public class ChessView extends View {
 //                            break;
 //                    }
 //                }
+                    if (action == null || !(action instanceof Move)) continue;
+                    Move move = (Move) action;
                     mData[move.getToX()][move.getToY()] = mData[move.getFromX()][move.getFromY()];
                     mData[move.getFromX()][move.getFromY()] = new ChessData(Cell.EMPTY, false);
                 }
@@ -450,9 +456,10 @@ public class ChessView extends View {
                 boolean flag = false;
                 for (int i = moves.length - 1; i >= 0; i--) {
                     for (int j = moves[i].length - 1; j >= 0; j--) {
-                        if (moves[i][j] != null) {
-                            mData[moves[i][j].fromX][moves[i][j].fromY].setSelected(true);
-                            mData[moves[i][j].toX][moves[i][j].toY].setSelected(true);
+                        if (moves[i][j] != null && moves[i][j] instanceof Move) {
+                            Move move = (Move) moves[i][j];
+                            mData[move.fromX][move.fromY].setSelected(true);
+                            mData[move.toX][move.toY].setSelected(true);
                             flag = true;
                             break;
                         }
@@ -635,6 +642,8 @@ public class ChessView extends View {
          */
         private int mFrame;
 
+        private float mFade = 1.f;
+
         public ChessData(Cell cell, boolean isSelected) {
             this.mCell = cell;
             this.mIsSelected = isSelected;
@@ -684,39 +693,12 @@ public class ChessView extends View {
             mFrame = frame;
         }
 
-        @Override
-        public String toString() {
-            return "ChessData{" +
-                    "mFigureFrom=" + mCell +
-                    ", mIsSelected=" + mIsSelected +
-                    ", mIndexToX=" + mIndexToX +
-                    ", mIndexToY=" + mIndexToY +
-                    ", mFrame=" + mFrame +
-                    '}';
+        public float getFade() {
+            return mFade;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ChessData chessData = (ChessData) o;
-
-            if (mIsSelected != chessData.mIsSelected) return false;
-            if (mIndexToX != chessData.mIndexToX) return false;
-            if (mIndexToY != chessData.mIndexToY) return false;
-            if (mFrame != chessData.mFrame) return false;
-            return mCell == chessData.mCell;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = mCell != null ? mCell.hashCode() : 0;
-            result = 31 * result + (mIsSelected ? 1 : 0);
-            result = 31 * result + mIndexToX;
-            result = 31 * result + mIndexToY;
-            result = 31 * result + mFrame;
-            return result;
+        public void setFade(float fade) {
+            mFade = fade;
         }
 
         protected ChessData clone() {
@@ -724,11 +706,39 @@ public class ChessView extends View {
             o.setFrame(mFrame);
             o.setIndexToX(mIndexToX);
             o.setIndexToY(mIndexToY);
+            o.setFade(mFade);
             return o;
         }
     }
 
-    public static final class Move {
+    public interface ActionImpl {
+    }
+
+    public static final class FadeIn implements ActionImpl {
+        private int toX;
+        private int toY;
+        private float fade;
+
+        public FadeIn(int toX, int toY, float fade) {
+            this.toX = toX;
+            this.toY = toY;
+            this.fade = fade;
+        }
+    }
+
+    public static final class FadeOut implements ActionImpl {
+        private int fromX;
+        private int fromY;
+        private float fade;
+
+        public FadeOut(int fromX, int fromY, float fade) {
+            this.fromX = fromX;
+            this.fromY = fromY;
+            this.fade = fade;
+        }
+    }
+
+    public static final class Move implements ActionImpl {
 
         private int fromX;
         private int fromY;
@@ -784,39 +794,6 @@ public class ChessView extends View {
 
         public int getToY() {
             return toY;
-        }
-
-        @Override
-        public String toString() {
-            return "Move{" +
-                    "fromX=" + fromX +
-                    ", fromY=" + fromY +
-                    ", toX=" + toX +
-                    ", toY=" + toY +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Move move = (Move) o;
-
-            if (fromX != move.fromX) return false;
-            if (fromY != move.fromY) return false;
-            if (toX != move.toX) return false;
-            return toY == move.toY;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = fromX;
-            result = 31 * result + fromY;
-            result = 31 * result + toX;
-            result = 31 * result + toY;
-            return result;
         }
     }
 
@@ -885,14 +862,19 @@ public class ChessView extends View {
 
         private OnDrawThreadListener mListener;
         private boolean mIsRunning = false;
-        private Move[][] mMoves;
+        private ActionImpl[][] mMoves;
         private ChessView mChessView;
+        /**
+         * Index of iteration per one animation.
+         * Each index will be called consistently
+         * in MOVING_DELAY millis;
+         */
         private int mIndex = 0;
         private int mFrame = 0;
         private int mState = PRE;
         private boolean mShowLastMove = false;
 
-        public DrawAnimationThread(Move[][] moves, ChessView chessView) {
+        public DrawAnimationThread(ActionImpl[][] moves, ChessView chessView) {
             this.mMoves = moves;
             this.mChessView = chessView;
         }
@@ -922,12 +904,15 @@ public class ChessView extends View {
             while (mIsRunning && mIndex < mMoves.length) {
 
                 long delay = MOVING_DELAY;
-                Move[] moves = mMoves[mIndex];
+                ActionImpl[] moves = mMoves[mIndex];
+
+                List<Move> movesCach = new ArrayList<>();
 
                 for (int i = 0; i < moves.length; i++) {
-                    Move move = moves[i];
-
-                    if (move == null) continue;
+                    ActionImpl action = moves[i];
+                    if (action == null || !(action instanceof Move)) continue;
+                    Move move = (Move) action;
+                    movesCach.add(move);
 
                     boolean needSelect = i == 0;
                     int fromX = move.getFromX();
@@ -962,8 +947,8 @@ public class ChessView extends View {
 
                 mChessView.postInvalidate();
 
-                if (mListener != null && mState == POST) {
-                    mListener.onMove(moves);
+                if (mListener != null && mState == POST && movesCach.size() > 0) {
+                    mListener.onMove(movesCach);
                 }
 
                 if (mState == MOVING) {
@@ -1003,14 +988,14 @@ public class ChessView extends View {
         }
 
         public interface OnDrawThreadListener {
-            void onMove(Move[] move);
+            void onMove(List<Move> moves);
 
             void onMovingFinished();
         }
     }
 
     public interface OnMoveListener {
-        void onMove(Move[] move);
+        void onMove(List<Move> moves);
 
         void onMovingFinished();
     }

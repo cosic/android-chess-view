@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.0"
     defaultConfig {
-        applicationId "com.ltst.chessview.sample"
-        minSdkVersion 16
-        targetSdkVersion 25
+        applicationId "com.cosic.chessview.sample"
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,12 +20,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project (':library')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project (':library')
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.support"
+    implementation "com.android.support:recyclerview-v7:$rootProject.ext.support"
+
+    testCompile 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    testCompile 'junit:junit:4.12'
 }
