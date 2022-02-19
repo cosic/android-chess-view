@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:textColor="#9b9b9b"
+        android:textColor="@color/labelColor"
         android:textSize="10sp"
         tools:text="7"
     />

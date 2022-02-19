@@ -11,3 +11,21 @@
     <color name="cellBlackColor">#b069c3</color>
     <color name="cellWhiteColor">#f4f494</color>
 </resources>
+
+<!---->
+<!--Alternative color packet-->
+<!---->
+<!--<resources>-->
+<!--    <color name="colorPrimary">#90caf9</color>-->
+<!--    <color name="colorPrimaryDark">#1976d2</color>-->
+<!--    <color name="colorAccent">#FF4081</color>-->
+<!--    <color name="colorAction2">@android:color/white</color>-->
+<!--    <color name="colorBackground">@color/colorPrimary</color>-->
+<!--    -->
+<!--    <color name="labelColor">#000000</color>-->
+<!--    <color name="boardColor">#f8bbd0</color>-->
+<!--    <color name="cellBlackColor">#bdbdbd</color>-->
+<!--    <color name="cellWhiteColor">#fafafa</color>-->
+<!--</resources>-->
+
+

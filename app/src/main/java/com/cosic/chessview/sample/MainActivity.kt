@@ -13,12 +13,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cosic.chessview.models.Action
 import com.cosic.chessview.ChessView
 import com.cosic.chessview.models.Move
+import com.cosic.chessview.sample.adapter.ItemClickSupport
+import com.cosic.chessview.sample.adapter.MoveItem
+import com.cosic.chessview.sample.adapter.MovesAdapter
 
 private const val ALPHA_DISABLE = 0.3f
 private const val ALPHA_ENABLE = 1.0f
 
 class MainActivity : AppCompatActivity() {
-    
+
+    /**
+     * Data which would be gotten from server;
+     */
+    private val mockedMoves by lazy {
+        val list = mutableListOf<MoveItem>()
+        list.add(MoveItem(1, "P", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", "e2", "e4", "e4", "w", true))
+        list.add(MoveItem(2, "P", "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", "e7", "e5", "e5", "b"))
+        list.add(MoveItem(3, "N", "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "g1", "f3", "Nf3", "w"))
+        list.add(MoveItem(4, "N", "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "b8", "c6", "Nc6", "b"))
+        list.add(MoveItem(5, "B", "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "f1", "b5", "Bb5", "w"))
+        list.add(MoveItem(6, "N", "r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "g8", "f6", "Nf6", "b"))
+        list.add(MoveItem(7, "P", "r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1", "e1", "g1", "O-O", "w"))
+        list.add(MoveItem(8, "N", "r1bqkb1r/pppp1ppp/2n5/1B2p3/4n3/5N2/PPPP1PPP/RNBQ1RK1", "f6", "e4", "Nxe4", "b"))
+        list.add(MoveItem(9, "R", "r1bqkb1r/pppp1ppp/2n5/1B2p3/4n3/5N2/PPPP1PPP/RNBQR1K1", "f1", "e1", "Re1", "w"))
+        list.add(MoveItem(10, "N", "r1bqkb1r/pppp1ppp/2nn4/1B2p3/8/5N2/PPPP1PPP/RNBQR1K1", "e4", "d6", "Nd6", "b"))
+        list.add(MoveItem(11, "N", "r1bqkb1r/pppp1ppp/2nn4/1B2N3/8/8/PPPP1PPP/RNBQR1K1", "f3", "e5", "Nxe5", "w"))
+        return@lazy list
+    }
+
     private val chessView by bindView<ChessView>(R.id.chess_view)
     private val toolbar by bindView<Toolbar>(R.id.toolbar)
     private val recyclerView by bindView<RecyclerView>(R.id.recycler_view)
@@ -92,19 +114,7 @@ class MainActivity : AppCompatActivity() {
             mMovesAdapter.setSelection(position)
         }
 
-        val list = mutableListOf<MoveItem>()
-        list.add(MoveItem(1, "P", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", "e2", "e4", "e4", "w", true))
-        list.add(MoveItem(2, "P", "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", "e7", "e5", "e5", "b"))
-        list.add(MoveItem(3, "N", "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "g1", "f3", "Nf3", "w"))
-        list.add(MoveItem(4, "N", "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R", "b8", "c6", "Nc6", "b"))
-        list.add(MoveItem(5, "B", "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "f1", "b5", "Bb5", "w"))
-        list.add(MoveItem(6, "N", "r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R", "g8", "f6", "Nf6", "b"))
-        list.add(MoveItem(7, "P", "r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1", "e1", "g1", "O-O", "w"))
-        list.add(MoveItem(8, "N", "r1bqkb1r/pppp1ppp/2n5/1B2p3/4n3/5N2/PPPP1PPP/RNBQ1RK1", "f6", "e4", "Nxe4", "b"))
-        list.add(MoveItem(9, "R", "r1bqkb1r/pppp1ppp/2n5/1B2p3/4n3/5N2/PPPP1PPP/RNBQR1K1", "f1", "e1", "Re1", "w"))
-        list.add(MoveItem(10, "N", "r1bqkb1r/pppp1ppp/2nn4/1B2p3/8/5N2/PPPP1PPP/RNBQR1K1", "e4", "d6", "Nd6", "b"))
-        list.add(MoveItem(11, "N", "r1bqkb1r/pppp1ppp/2nn4/1B2N3/8/8/PPPP1PPP/RNBQR1K1", "f3", "e5", "Nxe5", "w"))
-        mMovesAdapter.addAll(list)
+        mMovesAdapter.addAll(mockedMoves)
         mMovesAdapter.setSelection(0)
         reloadButtonsState()
     }
@@ -134,6 +144,7 @@ class MainActivity : AppCompatActivity() {
                 chessView.reset()
                 mMovesAdapter.setSelection(0)
                 recyclerView.scrollToPosition(0)
+                reloadButtonsState()
             }
             else -> return super.onOptionsItemSelected(item)
         }
